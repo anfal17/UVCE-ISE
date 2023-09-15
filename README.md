@@ -1,4 +1,4 @@
-# Information Science and Engineering (ISE) B.Tech - UVCE Bangalore
+# UVCE B.Tech - CSE - ISE Course Material
 
 ## About This Repository
 
