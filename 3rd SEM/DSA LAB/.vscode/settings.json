@@ -1,0 +1,21 @@
+{
+    "files.associations": {
+        "1.aStackUsingArrays.C": "cpp",
+        "1.cQueueUsingArrays.C": "cpp",
+        "2.aTowerofHanoi.C": "cpp",
+        "2.bInsertionSort.C": "cpp",
+        "stdio.h": "c",
+        "8.BinarySearchTree.C": "cpp",
+        "9.evaluatePostfix.C": "cpp",
+        "11.hashTables.C": "cpp",
+        "12.hashingOpenAddrss.C": "cpp",
+        "13.usingStructuresinFile.C": "cpp",
+        "14.compareWriteFile.C": "cpp",
+        "01.aStackUsingArrays.C": "cpp",
+        "01.cQueueUsingArrays.C": "cpp",
+        "02.aTowerofHanoi.C": "cpp",
+        "02.bInsertionSort.C": "cpp",
+        "08.BinarySearchTree.C": "cpp",
+        "09.evaluatePostfix.C": "cpp"
+    }
+}
