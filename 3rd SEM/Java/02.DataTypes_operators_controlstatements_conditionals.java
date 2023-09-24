@@ -90,16 +90,33 @@ public class DataTypesOperatorsControlStatementsConditionals {
             num++;
         } while (num <= 5);
 
-
         // for loop
         for (int i = 0; i < 5; i++) {
             System.out.println("Iteration " + (i + 1));
         }
 
-        //for each
+        // for each
         int[] numbers = { 1, 2, 3, 4, 5 };
         for (int number : numbers) {
             System.out.println("Number: " + number);
+        }
+
+        // break Statement: The break statement is used to exit from a loop or switch
+        // statement prematurely.
+        for (int i = 1; i <= 10; i++) {
+            if (i == 5) {
+                break;
+            }
+            System.out.println("Value: " + i);
+        }
+
+        // continue Statement: The continue statement is used to skip the current
+        // iteration of a loop and continue to the next iteration.
+        for (int i = 1; i <= 5; i++) {
+            if (i == 3) {
+                continue;
+            }
+            System.out.println("Value: " + i);
         }
 
         // Output
