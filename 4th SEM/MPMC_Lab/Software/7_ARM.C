@@ -1,6 +1,7 @@
+//Write C programs for ARM microprocessor using KEIL (Demonstrate with help of
+//suitable Program)
+
 #include<lpc214x.h>
-#include<stdio.h>
-#include<startup.s>
 
 int main(){
     int a, b, c, d, e, f;
