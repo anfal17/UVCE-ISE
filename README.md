@@ -2,7 +2,7 @@
 
 ## About This Repository
 
-Welcome to my GitHub repository! I'm currently a 4th semester B.Tech student in Information Science and Engineering at UVCE Bangalore. This repository serves as a record of my academic journey, containing code, projects, and coursework from various subjects and semesters.
+Welcome to my GitHub repository! I'm currently a 7th semester B.Tech student in Information Science and Engineering at UVCE Bangalore. This repository serves as a record of my academic journey, containing code, projects, and coursework from various subjects and semesters.
 
 ### Table of Contents
 
