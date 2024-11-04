@@ -10,5 +10,10 @@
 ### Adventure - https://youtube.com/playlist?list=PLSE8ODhjZXjYDBpQnSymaectKjxCy6BYq&si=71rymwVyD6M8AxDj
 
 ## Computer Networks
-### Reference Book + yt
+### gate smashers - https://youtube.com/playlist?list=PLxCzCOWd7aiGFBD2-2joCpWOLUrDLvVV_&si=XPkk6ddarbX_HqVP
+### yt - https://youtube.com/playlist?list=PLYtFZyi6Xjzcb7urPZmQR5u8tQF7-wfJt&si=3PhRAnfS9f991xLb
+### Reference Book 
 
+## Discrete Mathematical Structures
+#### Graphs - https://youtube.com/playlist?list=PLq76ktDFTJEJneLcRDT4X01ZMRJpzDFx-&si=1JXKSumSikVs1wMK
+#### Graphs illustrated - https://youtube.com/playlist?list=PLDV1Zeh2NRsDGO4--qE8yH72HFL1Km93P&si=BU7ve7b8rGAR2riz
