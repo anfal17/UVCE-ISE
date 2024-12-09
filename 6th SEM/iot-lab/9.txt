@@ -1,0 +1,194 @@
+#include <LiquidCrystal.h>
+#include <DHT.h>
+
+// Initialize the LCD (RS, E, D4, D5, D6, D7)
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+// Initialize DHT sensor (pin 6 and DHT22 model)
+#define DHTPIN 6
+#define DHTTYPE DHT22
+DHT dht(DHTPIN, DHTTYPE);
+
+// Variables to store the time
+int year, month, day, hour, minute, second;
+
+void setup() {
+  // Start serial communication for debugging and time input
+  Serial.begin(9600);
+  Serial.println("Starting program...");
+
+  // Initialize the LCD
+  lcd.begin(16, 2);  // Set up a 16x2 LCD screen
+  lcd.clear();       // Clear the screen
+
+  // Test if LCD initialization is successful
+  Serial.println("LCD initialized. Testing display...");
+  lcd.setCursor(0, 0);  // Position cursor at row 0, column 0
+  lcd.print("Hello, World!");  // Display test message
+  
+  // Delay to give time for LCD to show the message
+  delay(2000);
+  
+  // Ask user to input the time via Serial Monitor
+  Serial.println("Enter the time in this format: year month day hour minute second");
+  Serial.println("Example: 2024 11 25 15 30 00");
+
+  // Wait for user input in Serial Monitor
+  while (Serial.available() == 0) {
+    Serial.println("Waiting for input...");
+    delay(500);  // Check every 500 ms if data is available
+  }
+
+  // Read time data from Serial Monitor
+  year = Serial.parseInt();
+  month = Serial.parseInt();
+  day = Serial.parseInt();
+  hour = Serial.parseInt();
+  minute = Serial.parseInt();
+  second = Serial.parseInt();
+  
+  // Log the entered time values
+  Serial.print("Time set to: ");
+  Serial.print(year);
+  Serial.print("/");
+  Serial.print(month);
+  Serial.print("/");
+  Serial.print(day);
+  Serial.print(" ");
+  Serial.print(hour);
+  Serial.print(":");
+  Serial.print(minute);
+  Serial.print(":");
+  Serial.println(second);
+
+  // Display the entered time on LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Time Set: ");
+  lcd.print(year);
+  lcd.print("/");
+  lcd.print(month);
+  lcd.print("/");
+  lcd.print(day);
+  lcd.setCursor(0, 1);
+  lcd.print(hour);
+  lcd.print(":");
+  lcd.print(minute);
+  lcd.print(":");
+  lcd.print(second);
+  delay(2000);
+}
+
+void loop() {
+  // Get the current temperature from DHT sensor
+  delay(5000);
+  float temperature = dht.readTemperature(); // Celsius
+  float humidity = dht.readHumidity(); // Humidity (optional)
+
+  // Log sensor reading status
+  if (isnan(temperature) || isnan(humidity)) {
+    Serial.println("Error: Failed to read from DHT sensor.");
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Failed to read DHT");
+    return;
+  } else {
+    Serial.print("Temperature: ");
+    Serial.print(temperature);
+    Serial.print("C, Humidity: ");
+    Serial.print(humidity);
+    Serial.println("%");
+  }
+
+  // Increment time (simple time keeping)
+  second++;
+  if (second >= 60) {
+    second = 0;
+    minute++;
+  }
+  if (minute >= 60) {
+    minute = 0;
+    hour++;
+  }
+  if (hour >= 24) {
+    hour = 0;
+    day++;
+  }
+  if (day > 31) {  // Simplified check for months with 31 days
+    day = 1;
+    month++;
+  }
+  if (month > 12) {
+    month = 1;
+    year++;
+  }
+  
+  // Log current time
+  Serial.print("Current time: ");
+  Serial.print(year);
+  Serial.print("/");
+  Serial.print(month);
+  Serial.print("/");
+  Serial.print(day);
+  Serial.print(" ");
+  Serial.print(hour);
+  Serial.print(":");
+  Serial.print(minute);
+  Serial.print(":");
+  Serial.println(second);
+  
+  // Display date and time on LCD
+  lcd.setCursor(0, 0);
+  lcd.print(year);
+  lcd.print("/");
+  lcd.print(month);
+  lcd.print("/");
+  lcd.print(day);
+  
+  lcd.setCursor(0, 1);
+  lcd.print(hour);
+  lcd.print(":");
+  lcd.print(minute);
+  lcd.print(":");
+  lcd.print(second);
+
+  // Add a delay before updating LCD with temperature and humidity
+  delay(5000); // Delay between time and sensor data updates
+
+  // Clear the LCD and display temperature and humidity
+  lcd.clear();
+  
+  // Display temperature on LCD
+  lcd.setCursor(0, 0);
+  lcd.print("Temp: ");
+  lcd.print(temperature);
+  lcd.print("C");
+
+  // Display humidity on LCD (optional)
+  lcd.setCursor(0, 1);
+  lcd.print("Humidity: ");
+  lcd.print(humidity);
+  lcd.print("%");
+
+  // Wait for 1 second before refreshing
+  delay(1000); // Delay to prevent constant refreshing
+}
+
+
+Pin Connections:
+LCD Pin 1 (VSS) → GND on Arduino
+LCD Pin 2 (VCC) → 5V on Arduino
+LCD Pin 3 (V0) → GND or a potentiometer for contrast adjustment
+LCD Pin 4 (RS) → Pin 12 on Arduino
+LCD Pin 5 (RW) → GND on Arduino
+LCD Pin 6 (E) → Pin 11 on Arduino
+LCD Pin 7 (D0) → Not Used
+LCD Pin 8 (D1) → Not Used
+LCD Pin 9 (D2) → Not Used
+LCD Pin 10 (D3) → Not Used
+LCD Pin 11 (D4) → Pin 5 on Arduino
+LCD Pin 12 (D5) → Pin 4 on Arduino
+LCD Pin 13 (D6) → Pin 3 on Arduino
+LCD Pin 14 (D7) → Pin 2 on Arduino
+LCD Pin 15 (A, LED Anode) → 5V (for backlight)
+LCD Pin 16 (K, LED Cathode) → GND (for backlight)

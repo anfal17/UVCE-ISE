@@ -1,0 +1,40 @@
+3. greet acording to time
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Greeting and Webmaster Status</title>
+</head>
+<body>
+    <h1>Server Greeting and Webmaster Status</h1>
+
+    <?php
+    // Greet based on access time
+    date_default_timezone_set("UTC"); // Set timezone
+    $hour = (int) date("H");
+
+    if ($hour >= 5 && $hour < 12) {
+        $greeting = "Good Morning!";
+    } elseif ($hour >= 12 && $hour < 18) {
+        $greeting = "Good Afternoon!";
+    } elseif ($hour >= 18 && $hour < 21) {
+        $greeting = "Good Evening!";
+    } else {
+        $greeting = "Good Night!";
+    }
+
+    echo "<h2>$greeting Welcome to the website!</h2>";
+
+    // Check if the webmaster is logged in
+    $webmaster_username = "webmaster"; // Replace with actual webmaster username
+    $current_user = trim(shell_exec("whoami")); // Get the current logged-in user
+
+    if ($current_user === $webmaster_username) {
+        echo "<p>The webmaster ($webmaster_username) is currently logged in.</p>";
+    } else {
+        echo "<p>The webmaster ($webmaster_username) is not logged in.</p>";
+        echo "<p>Current user: $current_user</p>";
+    }
+    ?>
+</body>
+</html>

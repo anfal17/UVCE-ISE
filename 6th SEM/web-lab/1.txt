@@ -1,0 +1,69 @@
+a. server inforamtion
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Information</title>
+</head>
+<body>
+    <h1>Server Information</h1>
+    <table>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+        <?php
+        foreach ($_SERVER as $key => $value) {
+            echo "<tr>";
+            echo "<td>" . htmlspecialchars($key) . "</td>";
+            echo "<td>" . htmlspecialchars(is_array($value) ? json_encode($value) : $value) . "</td>";
+            echo "</tr>";
+        }
+        ?>
+    </table>
+</body>
+</html>
+
+
+b. unix command
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Execute Windows Command</title>
+</head>
+<body>
+    <h1>Execute Windows Command</h1>
+    <form method="post">
+        <label for="command">Enter a Windows command:</label><br>
+        <input type="text" id="command" name="command"  required>
+        <button type="submit" style="margin-top: 10px; padding: 10px 20px;">Execute</button>
+    </form>
+
+    <?php
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $command = $_POST['command'];
+
+        $allowed_commands = ['dir', 'cd', 'whoami', 'systeminfo', 'date /t']; // Add allowed commands here
+        $command_parts = explode(' ', $command);
+        if (in_array($command_parts[0], $allowed_commands)) {
+            // Execute the command
+            $output = shell_exec($command);
+            if ($output) {
+                echo "<h2>Command Output:</h2>";
+                echo "<textarea readonly>" . htmlspecialchars($output) . "</textarea>";
+            } else {
+                echo "<p style='color: red;'>No output or an error occurred while executing the command.</p>";
+            }
+        } else {
+            echo "<p style='color: red;'>Invalid or unauthorized command.</p>";
+        }
+    }
+    ?>
+</body>
+</html>
+

@@ -1,0 +1,70 @@
+// 13 session info
+
+<html>
+<head>
+    <title>Session Information</title>
+</head>
+<body>
+<h2>Click the button to start a session and display session information</h2>
+<form action="session" method="post">
+    <input type="submit" value="Display Session Information">
+</form>
+</body>
+</html>
+
+
+
+package com.example.weblab.action;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
+
+@WebServlet("/session")
+public class Servlet13 extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        response.setContentType("text/html");
+        HttpSession session = request.getSession(true);
+
+        String sessionId = session.getId();
+        long creationTime = session.getCreationTime();
+        long lastAccessedTime = session.getLastAccessedTime();
+
+        PrintWriter out = response.getWriter();
+        out.println("<html><head><title>Session Information</title></head><body>");
+        out.println("<h2>Session Information</h2>");
+        out.println("<p>Session ID: " + sessionId + "</p>");
+        out.println("<p>Creation Time: " + new Date(creationTime) + "</p>");
+        out.println("<p>Last Accessed Time: " + new Date(lastAccessedTime) + "</p>");
+        out.println("</body></html>");
+        out.close();
+    }
+
+}
+
+
+-------------------------------
+pom.xml:
+
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>4.0.1</version>
+    <scope>provided</scope>
+</dependency>
+
+
+--------------------------
+// web.xml
+
+<servlet-mapping>
+  <servlet-name>GreetingServlet</servlet-name>
+  <url-pattern>/GreetingServlet</url-pattern>
+</servlet-mapping>  

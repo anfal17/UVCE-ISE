@@ -1,0 +1,98 @@
+#include <DHT.h>
+#include <DHT_U.h>
+
+#define DHTPIN 2     
+#define DHTTYPE DHT11   
+#define LIGHTPIN 13     
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println(F("DHTxx test!"));
+
+  dht.begin();
+  pinMode(LIGHTPIN, OUTPUT);  
+  digitalWrite(LIGHTPIN, LOW); 
+}
+
+void loop() {
+  delay(2000);
+
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  float f = dht.readTemperature(true);
+
+  if (isnan(h) || isnan(t) || isnan(f)) {
+    Serial.println(F("Failed to read from DHT sensor!"));
+    return;
+  }
+
+  float hif = dht.computeHeatIndex(f, h);
+  float hic = dht.computeHeatIndex(t, h, false);
+
+  Serial.print(F("Humidity: "));
+  Serial.print(h);
+  Serial.print(F("%  Temperature: "));
+  Serial.print(t);
+  Serial.print(F("°C "));
+ 
+
+  if (h > 50 || t > 30) {
+    digitalWrite(LIGHTPIN, HIGH);
+
+  } else {
+    digitalWrite(LIGHTPIN, LOW); 
+  }
+}
+
+
+
+------------------------- or ------------------------------
+
+#include <SimpleDHT.h>
+
+int pinDHT11 = 8;
+int ledPin = 13; 
+
+SimpleDHT11 dht11(pinDHT11);
+
+void setup() {
+  pinMode(ledPin, OUTPUT); // Set the LED pin as output
+  Serial.begin(9600);
+  Serial.println("DHT11 Sensor with LED Control");
+}
+
+void loop() {
+  byte temperature = 0;
+  byte humidity = 0;
+
+  int err = dht11.read(&temperature, &humidity, nullptr);
+  if (err != SimpleDHTErrSuccess) {
+    Serial.print("Read error: ");
+    Serial.println(err);
+    delay(2000); // Delay before retrying
+    return;
+  }
+
+  Serial.print("Temperature: ");
+  Serial.print((int)temperature);
+  Serial.println(" °C");
+
+  Serial.print("Humidity: ");
+  Serial.print((int)humidity);
+  Serial.println(" %");
+
+  if (temperature > 30) {
+    digitalWrite(ledPin, HIGH);
+    Serial.println("Temperature is high! LED is ON.");
+  } else {
+    digitalWrite(ledPin, LOW); 
+    Serial.println("Temperature is normal. LED is OFF.");
+  }
+
+  // Wait before the next reading
+  delay(3000);
+}
+
+

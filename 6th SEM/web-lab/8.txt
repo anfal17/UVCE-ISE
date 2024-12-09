@@ -1,0 +1,87 @@
+//phpfile
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Book Information</title>
+</head>
+<body>
+    <h1>Add Book Information</h1>
+
+    <?php
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $conn = new mysqli("localhost", "root", "", "testdb");
+
+        if ($conn->connect_error) {
+            die("<p style='color: red;'>Connection failed: " . $conn->connect_error . "</p>");
+        }
+
+        $accession_number = $_POST['accession_number'];
+        $title = $_POST['title'];
+        $authors = $_POST['authors'];
+        $edition = $_POST['edition'];
+        $publication = $_POST['publication'];
+
+        $sql = "INSERT INTO books (accession_number, title, authors, edition, publication) 
+                VALUES ('$accession_number', '$title', '$authors', '$edition', '$publication')";
+
+        if ($conn->query($sql) === TRUE) {
+            echo "<h2 style='color: green;'>Book information added successfully!</h2>";
+        } else {
+            echo "<p style='color: red;'>Error: " . $sql . "<br>" . $conn->error . "</p>";
+        }
+
+        $conn->close();
+    }
+    ?>
+
+    <form action="" method="post">
+        <label for="accession_number">Accession Number:</label><br>
+        <input type="number" id="accession_number" name="accession_number" required><br><br>
+
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title" required><br><br>
+
+        <label for="authors">Authors:</label><br>
+        <input type="text" id="authors" name="authors" required><br><br>
+
+        <label for="edition">Edition:</label><br>
+        <input type="text" id="edition" name="edition"><br><br>
+
+        <label for="publication">Publication:</label><br>
+        <input type="text" id="publication" name="publication"><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
+
+
+
+
+
+//database
+CREATE TABLE books (
+    accession_number INT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    authors VARCHAR(255) NOT NULL,
+    edition VARCHAR(50),
+    publication VARCHAR(255)
+);
+
+//dummy data
+INSERT INTO books (accession_number, title, authors, edition, publication)
+VALUES 
+(1, 'The Great Gatsby', 'F. Scott Fitzgerald', '1st', 'Scribner'),
+(2, 'To Kill a Mockingbird', 'Harper Lee', '2nd', 'J.B. Lippincott & Co.'),
+(3, '1984', 'George Orwell', '1st', 'Secker & Warburg'),
+(4, 'Pride and Prejudice', 'Jane Austen', '3rd', 'T. Egerton'),
+(5, 'The Catcher in the Rye', 'J.D. Salinger', '1st', 'Little, Brown and Company'),
+(6, 'Moby-Dick', 'Herman Melville', '1st', 'Harper & Brothers'),
+(7, 'War and Peace', 'Leo Tolstoy', '4th', 'The Russian Messenger'),
+(8, 'Ulysses', 'James Joyce', '1st', 'Shakespeare and Company'),
+(9, 'The Odyssey', 'Homer', 'Revised', 'Penguin Classics'),
+(10, 'Hamlet', 'William Shakespeare', '2nd', 'The Globe Press');
+

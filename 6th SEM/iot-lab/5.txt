@@ -1,0 +1,35 @@
+5th serial comm
+https://wokwi.com/projects/415510422042625025
+
+// Pin where LED is connected
+#define LED_PIN 12
+
+void setup() {
+  // Initialize serial communication
+  Serial.begin(9600);
+  
+  // Set LED pin as output
+  pinMode(LED_PIN, OUTPUT);
+}
+
+void loop() {
+  // Check if data is available to read from Serial Monitor
+  if (Serial.available() > 0) {
+    // Read the incoming byte
+    char input = Serial.read();
+    
+    // Turn the LED on or off based on the received input
+    if (input == '1') {
+      digitalWrite(LED_PIN, HIGH);  // Turn LED on
+      Serial.println("LED ON");
+    }
+    else if (input == '0') {
+      digitalWrite(LED_PIN, LOW);   // Turn LED off
+      Serial.println("LED OFF");
+    }
+    else {
+      // If input is not 1 or 0, print a message
+      Serial.println("Invalid input! Please send '1' to turn ON and '0' to turn OFF.");
+    }
+  }
+}

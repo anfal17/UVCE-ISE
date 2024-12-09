@@ -1,0 +1,70 @@
+3a.txt
+
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier, export_text
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+
+# Load the dataset with correct column names
+data = pd.read_csv('playtennis.csv', names=['Outlook', 'Temperature', 'Humidity', 'Windy', 'PlayTennis'])
+
+# Encode categorical data into numerical data
+label_encoders = {}
+for column in ['Outlook', 'Temperature', 'Humidity', 'Windy']:
+    le = LabelEncoder()
+    data[column] = le.fit_transform(data[column])
+    label_encoders[column] = le  # Store the label encoder for future use
+
+# Verify the encoded data
+print("Encoded Dataset:\n", data)
+
+# Split dataset into features (X) and target (y)
+X = data[['Outlook', 'Temperature', 'Humidity', 'Windy']]
+y = data['PlayTennis']
+
+# Split into training and testing data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Train a Decision Tree Classifier
+model = DecisionTreeClassifier(criterion='entropy', random_state=42)
+model.fit(X_train, y_train)
+
+# Display the decision tree rules
+tree_rules = export_text(model, feature_names=list(X.columns))
+print("Decision Tree Rules:\n", tree_rules)
+
+# Make predictions on the test data
+y_pred = model.predict(X_test)
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Model Accuracy: {accuracy * 100:.2f}%")
+
+# Classify a new sample
+# Example: Outlook=2 (Sunny), Temperature=1 (Mild), Humidity=0 (Normal), Windy=0 (False)
+new_sample = [[0, 0, 0, 1]]  # Use numerical values
+prediction = model.predict(new_sample)
+print(f"Prediction for sample {new_sample}: {'PlayTennis=1' if prediction[0] == 1 else 'PlayTennis=0'}")
+
+
+
+
+
+Outlook, Temperature, Humidity, Windy, PlayTennis
+0,0,0,0,0
+0,0,0,1,0
+1,0,0,0,1
+2,1,0,0,1
+2,2,1,0,1
+2,2,1,1,0
+1,2,1,1,1
+0,1,0,0,0
+0,2,1,0,1
+2,1,1,0,1
+0,1,1,1,1
+1,1,0,1,1
+1,0,1,0,1
+2,1,0,1,0
+0,1,1,1,1
+1,1,1,1,1

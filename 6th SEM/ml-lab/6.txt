@@ -1,0 +1,82 @@
+# 6th bayesian
+
+# pip install pgmpy numpy pandas
+
+
+import pandas as pd
+from pgmpy.estimators import MaximumLikelihoodEstimator
+from pgmpy.models import BayesianModel
+from pgmpy.inference import VariableElimination
+
+# Load the heart disease dataset (replace with your correct file path)
+data = pd.read_csv("6a.csv")
+heart_disease = pd.DataFrame(data)
+
+# Define the Bayesian model structure
+model = BayesianModel([
+    ('age', 'Lifestyle'),
+    ('Gender', 'Lifestyle'),
+    ('Family', 'heartdisease'),
+    ('diet', 'cholestrol'),
+    ('Lifestyle', 'diet'),
+    ('cholestrol', 'heartdisease'),
+    ('diet', 'cholestrol')
+])
+
+# Fit the model to the data
+model.fit(heart_disease, estimator=MaximumLikelihoodEstimator)
+
+# Create the inference object
+HeartDisease_infer = VariableElimination(model)
+
+# Display input prompts for the user
+print('For Age enter SuperSeniorCitizen:0, SeniorCitizen:1, MiddleAged:2, Youth:3, Teen:4')
+print('For Gender enter Male:0, Female:1')
+print('For Family History enter Yes:1, No:0')
+print('For Diet enter High:0, Medium:1')
+print('for LifeStyle enter Athlete:0, Active:1, Moderate:2, Sedentary:3')
+print('for Cholesterol enter High:0, BorderLine:1, Normal:2')
+
+# Take user input for each feature
+q = HeartDisease_infer.query(
+    variables=['heartdisease'], 
+    evidence={
+        'age': int(input('(SuperSeniorCitizen:0, SeniorCitizen:1, MiddleAged:2, Youth:3, Teen:4) Enter Age: ')),
+        'Gender': int(input('(Male:0, Female:1) Enter Gender: ')),
+        'Family': int(input('(Yes:1, No:0) Enter Family History: ')),
+        'diet': int(input('(High:0, Medium:1) Enter Diet: ')),
+        'Lifestyle': int(input('(Athlete:0, Active:1, Moderate:2, Sedentary:3) Enter Lifestyle: ')),
+        'cholestrol': int(input('(High:0, BorderLine:1, Normal:2) Enter Cholestrol: '))
+    }
+)
+
+# Output the results
+print("\nThe probability of having heart disease based on the inputs is:")
+print(f"P(Heart Disease = Yes) = {q.values[0]}")  # Probability of 'Yes' (heart disease)
+print(f"P(Heart Disease = No) = {q.values[1]}")   # Probability of 'No' (no heart disease)
+
+
+
+# dataset
+
+age,Gender,Family,diet,Lifestyle,cholestrol,heartdisease
+0,0,1,1,3,0,1
+0,1,1,1,3,0,1
+1,0,0,0,2,1,1
+4,0,1,1,3,2,0
+3,1,1,0,0,2,0
+2,0,1,1,1,0,1
+4,0,1,0,2,0,1
+0,0,1,1,3,0,1
+3,1,1,0,0,2,0
+1,1,0,0,0,2,1
+4,1,0,1,2,0,1
+4,0,1,1,3,2,0
+2,1,0,0,0,0,0
+2,0,1,1,1,0,1
+3,1,1,0,0,1,0
+0,0,1,0,0,2,1
+1,1,0,1,2,1,1
+3,1,1,1,0,1,0
+4,0,1,1,3,2,0
+

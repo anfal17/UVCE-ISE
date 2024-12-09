@@ -1,0 +1,72 @@
+// 11th greeting based on time 
+
+<h2>Welcome!</h2>
+        <p>Click the button below to get a greeting based on the server's current time:</p>
+        <form action="greeting" method="GET">
+            <button type="submit">Get Greeting</button>
+        </form>
+
+
+
+package com.example.weblab.action;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalTime;
+
+@WebServlet("/greeting")
+
+public class Servlet11 extends HttpServlet {
+        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            // TODO Auto-generated method stub
+            response.getWriter().append("Served at: ").append(request.getContextPath());
+            LocalTime currentTime = LocalTime.now();
+            String greeting;
+            if (currentTime.isBefore(LocalTime.NOON)) {
+                greeting = "Good Morning!";
+            } else if (currentTime.isBefore(LocalTime.of(17, 0))) {
+                greeting = "Good Afternoon!";
+            } else {
+                greeting = "Good Evening!";
+            }
+            response.setContentType("text/html");
+            PrintWriter out = response.getWriter();
+            out.println("<html>");
+            out.println("<head><title>Greeting Message</title></head>");
+            out.println("<body>");
+            out.println("<h2>" + greeting + "</h2>");
+            out.println("<p>The current server time is: " + currentTime + "</p>");
+
+        }
+}
+
+
+
+
+-------------------------------
+pom.xml:
+
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>4.0.1</version>
+    <scope>provided</scope>
+</dependency>
+
+
+--------------------------
+// web.xml
+
+<servlet>
+  <servlet-name>GreetingServlet</servlet-name>
+  <servlet-class>com.example.weblab.action.Servlet1</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>GreetingServlet</servlet-name>
+  <url-pattern>/GreetingServlet</url-pattern>
+</servlet-mapping>

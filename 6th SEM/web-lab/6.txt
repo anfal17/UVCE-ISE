@@ -1,0 +1,61 @@
+6. user store in db
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert User Data</title>
+</head>
+<body>
+    <h1>Insert User Information</h1>
+
+    <!-- HTML Form -->
+    <form method="POST" action="">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required><br><br>
+        
+        <button type="submit" name="submit">Insert</button>
+    </form>
+
+    <?php
+    // PHP Code to Insert Data into MySQL Database
+    if (isset($_POST['submit'])) {
+        $name = $_POST['name'];
+        $age = $_POST['age'];
+
+        // Database Connection
+        $conn = new mysqli('localhost', 'root', '', 'testdb');
+
+        // Check Connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        // Insert Query
+        $sql = "INSERT INTO users (name, age) VALUES ('$name', $age)";
+        
+        if ($conn->query($sql) === TRUE) {
+            echo "<p>New record created successfully!</p>";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+
+        // Close Connection
+        $conn->close();
+    }
+    ?>
+
+</body>
+</html>
+
+
+database:
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    age INT NOT NULL
+);
+

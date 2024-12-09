@@ -1,0 +1,86 @@
+//searchbook.php
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Book</title>
+</head>
+<body>
+    <h1>Search for a Book</h1>
+    <form method="post">
+        <label for="title">Enter Book Title:</label><br>
+        <input type="text" id="title" name="title" required><br><br>
+        <button type="submit">Search</button>
+    </form>
+
+    <?php
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Database connection
+        $conn = new mysqli("localhost", "root", "", "library_db");
+
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        // Get the book title from the form
+        $title = $_POST['title'];
+
+        // SQL query to search for books by title (case-insensitive search)
+        $sql = "SELECT * FROM books WHERE title LIKE '%$title%'";
+        $result = $conn->query($sql);
+
+        echo "<h1>Search Results</h1>";
+
+        if ($result->num_rows > 0) {
+            echo "<table border='1' cellpadding='10'>";
+            echo "<tr>
+                    <th>Accession Number</th>
+                    <th>Title</th>
+                    <th>Authors</th>
+                    <th>Edition</th>
+                    <th>Publication</th>
+                  </tr>";
+            
+            // Display search results
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr>
+                        <td>{$row['accession_number']}</td>
+                        <td>{$row['title']}</td>
+                        <td>{$row['authors']}</td>
+                        <td>{$row['edition']}</td>
+                        <td>{$row['publication']}</td>
+                      </tr>";
+            }
+            echo "</table>";
+        } else {
+            echo "<p>No books found with the title '{$title}'</p>";
+        }
+
+        // Close connection
+        $conn->close();
+    }
+    ?>
+</body>
+</html>
+
+
+
+
+//setup databse
+
+CREATE TABLE books (
+    accession_number INT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    authors VARCHAR(255) NOT NULL,
+    edition VARCHAR(50),
+    publication VARCHAR(255)
+);
+
+
+INSERT INTO books (accession_number, title, authors, edition, publication) VALUES
+(101, 'The Great Gatsby', 'F. Scott Fitzgerald', '1st', 'Scribner'),
+(102, 'To Kill a Mockingbird', 'Harper Lee', '1st', 'J.B. Lippincott & Co.'),
+(103, '1984', 'George Orwell', '1st', 'Secker & Warburg');

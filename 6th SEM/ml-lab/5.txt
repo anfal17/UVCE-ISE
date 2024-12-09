@@ -1,0 +1,44 @@
+# 5th naive bayesian , no dataset required
+
+# install if not present
+# pip install scikit-learn pandas numpy
+
+from sklearn.datasets import fetch_20newsgroups
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score, precision_score, recall_score, classification_report
+
+# Load the dataset (20 Newsgroups)
+newsgroups = fetch_20newsgroups(subset='train')  # Fetch data for training
+
+# Split the data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(newsgroups.data, newsgroups.target, test_size=0.3, random_state=42)
+
+# Convert the text data into TF-IDF features
+vectorizer = TfidfVectorizer(stop_words='english', max_features=1000)
+X_train_tfidf = vectorizer.fit_transform(X_train)
+X_test_tfidf = vectorizer.transform(X_test)
+
+# Initialize the Naive Bayes classifier (MultinomialNB)
+naive_bayes_classifier = MultinomialNB()
+
+# Train the classifier
+naive_bayes_classifier.fit(X_train_tfidf, y_train)
+
+# Predict the labels for the test set
+y_pred = naive_bayes_classifier.predict(X_test_tfidf)
+
+# Calculate accuracy, precision, and recall
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, average='weighted', zero_division=0)
+recall = recall_score(y_test, y_pred, average='weighted', zero_division=0)
+
+# Print the results
+print(f'Accuracy: {accuracy:.4f}')
+print(f'Precision: {precision:.4f}')
+print(f'Recall: {recall:.4f}')
+
+# Detailed classification report
+print("\nClassification Report:\n")
+print(classification_report(y_test, y_pred, target_names=newsgroups.target_names))

@@ -1,0 +1,34 @@
+4. digital clock
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Digital Clock</title>
+    <script>
+        // Function to update the clock every second
+        function updateClock() {
+            const clockElement = document.getElementById("clock");
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            clockElement.textContent = hours + ":" + minutes + ":" + seconds;
+        }
+
+        // Call updateClock every 1 second
+        setInterval(updateClock, 1000);
+
+        // Initialize clock on page load
+        window.onload = updateClock;
+    </script>
+</head>
+<body>
+    <h1>Server Digital Clock</h1>
+    <h2 id="clock"></h2>
+
+    <?php
+    // Display the current server time when the page loads (fallback for non-JS environments)
+    echo "<noscript>Current Server Time: " . date("H:i:s") . "</noscript>";
+    ?>
+</body>
+</html>

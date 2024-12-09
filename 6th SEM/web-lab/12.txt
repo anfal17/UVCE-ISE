@@ -1,0 +1,79 @@
+// 12th cookie 
+
+<h2>Enter Your Name to save in cookie</h2>
+        <form action="cookie" method="post">
+            <label for="username">Name:</label>
+            <input type="text" id="username" name="username" required>
+            <button type="submit">Submit</button>
+        </form>
+
+
+package com.example.weblab.action;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+@WebServlet("/cookie")
+public class Servlet12 extends HttpServlet {
+    
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String username = request.getParameter("username");
+        
+        Cookie userCookie = new Cookie("username", username);
+        userCookie.setMaxAge(60 * 60 * 24); // Set cookie to expire in 24 hours
+        response.addCookie(userCookie);
+        
+        response.setContentType("text/html");
+        
+        try (PrintWriter out = response.getWriter()) {
+            out.println("<html>");
+            out.println("<head><title>Cookie Example</title></head>");
+            out.println("<body>");
+            out.println("<h2>Hello, " + username + "!</h2>");
+            out.println("<p>Your name has been saved in a cookie.</p>");
+            out.println("<h3>Current Cookies:</h3>");
+
+            // Retrieve and display all cookies
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    out.println("<p>" + cookie.getName() + " = " + cookie.getValue() + "</p>");
+                }
+            } else {
+                out.println("<p>No cookies found.</p>");
+            }
+
+            out.println("</body></html>");
+        }
+    }
+}
+
+
+-------------------------------
+pom.xml:
+
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>4.0.1</version>
+    <scope>provided</scope>
+</dependency>
+
+
+--------------------------
+// web.xml
+
+<servlet>
+  <servlet-name>GreetingServlet</servlet-name>
+  <servlet-class>com.example.weblab.action.Servlet1</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>GreetingServlet</servlet-name>
+  <url-pattern>/GreetingServlet</url-pattern>
+</servlet-mapping> 

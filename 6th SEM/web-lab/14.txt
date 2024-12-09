@@ -1,0 +1,71 @@
+// 14 server information
+
+<html>
+<head>
+    <title>Server Information</title>
+</head>
+<body>
+    <h2>Click the button to view server request information</h2>
+    <form action="reqsession" method="post">
+        <input type="submit" value="Get Server Information">
+    </form>
+</body>
+</html>
+
+
+
+
+package com.example.weblab.action;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+@WebServlet("/reqsession")
+public class Servlet14 extends HttpServlet {
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        response.setContentType("text/html");
+
+        String requestMethod = request.getMethod();
+        String requestURL = request.getRequestURL().toString();
+        String protocol = request.getProtocol();
+        String remoteAddr = request.getRemoteAddr();
+
+        PrintWriter out = response.getWriter();
+        out.println("<html><head><title>Server Information</title></head><body>");
+        out.println("<h2>Server Request Information</h2>");
+        out.println("<p>Request Method: " + requestMethod + "</p>");
+        out.println("<p>Request URL: " + requestURL + "</p>");
+        out.println("<p>Protocol: " + protocol + "</p>");
+        out.println("<p>Remote Address: " + remoteAddr + "</p>");
+        out.println("</body></html>");
+        out.close();
+    }
+
+}
+
+
+
+
+-------------------------------
+pom.xml:
+
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>4.0.1</version>
+    <scope>provided</scope>
+</dependency>
+
+
+--------------------------
+// web.xml
+
+<servlet-mapping>
+  <servlet-name>GreetingServlet</servlet-name>
+  <url-pattern>/GreetingServlet</url-pattern>
+</servlet-mapping>  

@@ -1,0 +1,29 @@
+program 3 - ( LDR )
+
+circuit link: https://wokwi.com/projects/411090995575472129
+
+
+//code:
+
+int ldrPin = A0;  
+int ledPin = 13;  // LED connected to digital pin 13
+int threshold = 400;  // Threshold for detecting darkness
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);  
+}
+
+void loop() {
+  int ldrValue = analogRead(ldrPin);  // Read LDR value
+  Serial.println(ldrValue);  // Print the value to the serial monitor
+  
+  // If the LDR value is greater than the threshold, turn on the LED (indicating low light)
+  if (ldrValue > threshold) {
+    digitalWrite(ledPin, HIGH);  // Turn on the LED
+  } else {
+    digitalWrite(ledPin, LOW);  // Turn off the LED
+  }
+  
+  delay(100); 
+}

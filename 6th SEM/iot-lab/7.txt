@@ -1,0 +1,46 @@
+Dc motor 
+
+int motorPin = 9; 
+
+void setup() {
+  pinMode(motorPin, OUTPUT);
+}
+
+void loop() {
+  analogWrite(motorPin, 255); // 255 is the maximum PWM value (100% duty cycle)
+  
+  delay(5000);
+  
+  // Turn the motor OFF
+  analogWrite(motorPin, 0);
+  
+  delay(5000);
+}
+
+Stepper motor 
+
+#include <Stepper.h>
+
+const int stepsPerRevolution = 2048; 
+
+Stepper myStepper(stepsPerRevolution, 8, 10, 9, 11); // Pins connected to IN1, IN3, IN2, IN4
+
+void setup() {
+  myStepper.setSpeed(10); // Speed in RPM
+  
+  Serial.begin(9600);
+  Serial.println("Stepper motor initialized.");
+}
+
+void loop() {
+  Serial.println("Stepping forward...");
+  myStepper.step(stepsPerRevolution);
+  
+  delay(1000); // Wait 1 second
+  
+  // Step the motor backward
+  Serial.println("Stepping backward...");
+  myStepper.step(-stepsPerRevolution); 
+  
+  delay(1000); // Wait 1 second
+}

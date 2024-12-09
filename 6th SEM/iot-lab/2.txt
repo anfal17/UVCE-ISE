@@ -1,0 +1,32 @@
+circuit link : https://wokwi.com/projects/411089174492130305
+
+// code:
+
+#define green 12
+#define yellow 11
+#define red 10
+
+void setup() {
+  pinMode(green, OUTPUT);
+  pinMode(yellow, OUTPUT);
+  pinMode(red, OUTPUT);
+
+}
+
+void lights(int v1, int v2, int v3) {
+  digitalWrite(v1, HIGH);
+  digitalWrite(v2, LOW);
+  digitalWrite(v3, LOW);
+}
+
+void loop() {
+  lights(green, yellow, red);
+  delay(1000);
+
+  lights(yellow, green, red);
+  delay(1000);
+
+  lights(red, yellow, green);
+  delay(1000);
+
+}

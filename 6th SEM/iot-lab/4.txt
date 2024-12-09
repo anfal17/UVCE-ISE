@@ -1,0 +1,45 @@
+https://wokwi.com/projects/415631944629721089
+
+const int buttonPin = 2;  
+const int ledPin = 13;  
+
+// Variables
+bool ledState = LOW;           // Current state of the LED
+bool lastButtonState = LOW;
+bool isDelay = true;    // Last state of the button
+unsigned long lastDebounceTime = 0;  // Timestamp of the last button press
+const unsigned long debounceDelay = 5000;  // Debounce delay in milliseconds
+
+void setup() {
+  pinMode(buttonPin, INPUT);  // Set the button pin as input
+  pinMode(ledPin, OUTPUT);    // Set the LED pin as output
+  digitalWrite(ledPin, ledState);  // Initialize the LED state
+}
+
+void loop() {
+  int reading = digitalRead(buttonPin);  // Read the button state
+
+  // If the button state changes, reset the debounce timer
+  if (reading != lastButtonState) {
+    lastDebounceTime = millis();
+  }
+
+  // If the time since the last state change is greater than the debounce delay
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    // Check if the button state is HIGH
+    if (reading == HIGH && lastButtonState == LOW) {
+      ledState = !ledState;  // Toggle the LED state
+      digitalWrite(ledPin, ledState);  // Update the LED
+    }
+  }
+
+  if(isDelay){
+    isDelay = false;
+  }
+
+  if(!isDelay){
+    delay(6000);
+  }
+
+  lastButtonState = reading;  // Save the current button state
+}

@@ -1,0 +1,44 @@
+a. greeting
+
+<form method="POST">
+        <label for="">User name</label>
+        <input type="text" name="user" id="">
+        <button type="submit">Get Greeting</button>
+    </form>
+
+    <?php
+        if($_SERVER['REQUEST_METHOD'] == "POST"){
+            $name  = $_POST['user'];
+            $greetings = array('hi', 'hello', 'Welcom', 'Hey');
+            $randno = array_rand($greetings, 1);
+            echo "<h1> $name , $greetings[$randno] </h1>";
+        }
+    ?>
+
+-----------------------
+
+
+b. visitor counts
+<html>
+<head>
+    <title>Visitor Counter</title>
+</head>
+<body>
+    <h1>Welcome to the Visitor Counter Page</h1>
+
+    <?php
+        $counter_file = "counter.txt";
+
+        if (!file_exists($counter_file)) {
+            file_put_contents($counter_file, "0");
+        }
+
+        $current_count = (int) file_get_contents($counter_file);
+        $current_count++;
+        file_put_contents($counter_file, $current_count);
+
+    
+        echo "<h2>Total Visitors: $current_count</h2>";
+    ?>
+</body>
+</html>

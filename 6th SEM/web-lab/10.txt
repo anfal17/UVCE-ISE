@@ -1,0 +1,129 @@
+// 10th random greeting
+
+
+10a-------
+
+<html>
+<head>
+<title>Greetings</title>
+</head>
+<body>
+    <form action="greet" method="get">
+         <h2>Enter your name:</h2>
+        <input type=text name=name />
+        <input type=submit value=submit />
+    </form>
+</body>
+</html>
+
+
+// java code:
+package com.example.weblab.action;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Random;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/greet")
+public class Servlet1 extends HttpServlet {
+
+    private static final String[] GREETINGS = {
+            "Hello", "Welcome", "Hi there", "Greetings", "Hey", "Good to see you"
+    };
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String username = request.getParameter("name");
+        Random random = new Random();
+        String greeting = GREETINGS[random.nextInt(GREETINGS.length)];
+        
+        response.setContentType("text/html");
+
+       PrintWriter out = response.getWriter() ;
+            out.println("<html>");
+            out.println("<head><title>Greeting</title></head>");
+            out.println("<body>");
+            out.println("<h2>" + greeting + ", " + username + "!</h2>");
+            out.println("</body>");
+            out.println("</html>");
+
+    }
+}
+
+-------------------------------
+pom.xml:
+
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>4.0.1</version>
+    <scope>provided</scope>
+</dependency>
+
+
+--------------------------
+// web.xml
+
+<servlet>
+  <servlet-name>GreetingServlet</servlet-name>
+  <servlet-class>com.example.weblab.action.Servlet1</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>GreetingServlet</servlet-name>
+  <url-pattern>/GreetingServlet</url-pattern>
+</servlet-mapping> 
+
+
+
+
+10b -----------------------
+
+<h2>Select a Background Color</h2>
+    <form action="color" method="POST">
+        <label for="color">Choose a color:</label>
+        <input type="color" id="color" name="color" required>
+        <button type="submit">Apply Color</button>
+    </form>
+
+
+// java code:
+
+package com.example.weblab.action;
+
+import javax.servlet.annotation.WebServlet;
+
+import java.io.IOException; // For IOException
+import java.io.PrintWriter; // For PrintWriter to generate HTML response
+import java.time.LocalTime;
+
+import javax.servlet.ServletException; // For handling servlet exceptions
+import javax.servlet.http.HttpServlet; // Base class for HTTP servlets
+import javax.servlet.http.HttpServletRequest; // To handle HTTP requests
+import javax.servlet.http.HttpServletResponse; // To handle HTTP responses
+
+@WebServlet("/color")
+public class Servlet1b extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String color = request.getParameter("color");
+
+        response.setContentType("text/html");
+        response.setCharacterEncoding("UTF-8");
+        
+        PrintWriter out = response.getWriter();
+            out.println("<html>");
+            out.println("<head><title>Background Color Changer</title></head>");
+            out.println("<body style='background-color: " + color + ";'>");
+            out.println("<h2>The background color has been set to: " + color + "</h2>");
+//            out.println("<a href='2acolor.jsp'>Choose another color</a>");
+            out.println("</body>");
+            out.println("</html>");
+        
+    }
+
+}
+
+

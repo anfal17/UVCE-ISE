@@ -1,0 +1,81 @@
+5. show table details 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Database Table Contents</title>
+</head>
+<body>
+    <h1>Current Contents of the Table</h1>
+
+    <?php
+    // Database connection credentials
+    $servername = "localhost"; 
+    $username = "root"; 
+    $password = ""; 
+    $dbname = "testdb"; 
+
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Query to fetch data from a table
+    $table_name = "test_table"; 
+    $sql = "SELECT * FROM $table_name";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        echo "<table border='1' cellpadding='10'>";
+        echo "<tr>";
+
+        // Fetch column names dynamically
+        $fields = $result->fetch_fields();
+        foreach ($fields as $field) {
+            echo "<th>" . htmlspecialchars($field->name) . "</th>";
+        }
+
+        echo "</tr>";
+
+        // Fetch and display rows dynamically
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            foreach ($row as $value) {
+                echo "<td>" . htmlspecialchars($value) . "</td>";
+            }
+            echo "</tr>";
+        }
+
+        echo "</table>";
+    } else {
+        echo "<p>No data found in the table.</p>";
+    }
+
+    // Close the connection
+    $conn->close();
+    ?>
+</body>
+</html>
+
+
+
+database:
+CREATE TABLE test_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+
+INSERT INTO test_table (name, age) VALUES
+('Charlie', 28),
+('Diana', 22),
+('Eve', 35),
+('Frank', 40),
+('Grace', 27),
+('Hank', 32),
+('Ivy', 29),
+('Jack', 21),
+('Karen', 45);
+
