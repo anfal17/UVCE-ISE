@@ -1,82 +1,130 @@
-#include<stdio.h>
-#include<string.h>
-
-// Define character arrays for various purposes
-char data[100], concatdata[117], src_crc[17], dest_crc[17], frame[120], divident[18], divisor[18] = "10001000000001000", res[17] = "0000000000000000";
-
-// Function to calculate CRC
-void crc_cal(int node) {
-    int i, j;
-    // Loop through each character in concatdata starting from the 17th character
-    for(j = 17; j <= strlen(concatdata); j++) {
-        // If the first character of divident is '1', toggle divident based on the divisor
-        if(divident[0] == '1') {
-            for(i = 1; i <= 16; i++)
-                // If divident[i] differs from divisor[i], set divident[i-1] to '1'
-                if(divident[i]!= divisor[i]) divident[i - 1] = '1';
-                // Otherwise, set divident[i-1] to '0'
-                else divident[i - 1] = '0';
-        } 
-        // If the first character of divident is '0', shift divident left
-        else {
-            for(i = 1; i <= 16; i++) divident[i - 1] = divident[i];
-        }
-        // Depending on the node, append the next character from concatdata or frame to divident
-        if(node == 0) divident[i - 1] = concatdata[j];
-        else divident[i - 1] = frame[j];
-    }
-    // Null-terminate divident after processing all characters
-    divident[i - 1] = '\0';
-    // Print the updated divident, which represents the CRC
-    printf("\ncrc is %s\n", divident);
-    // Copy the updated divident to either src_crc or dest_crc based on the node
-    if(node == 0) strcpy(src_crc, divident);
-    else strcpy(dest_crc, divident);
-}
+#include <stdio.h>
+#include <string.h>
 
 int main() {
-    int i, len, rest;
-    // Prompt the user to enter the data to be sent
-    printf("\n\t\t\tAT SOURCE NODE\n\nEnter the data to be sent: ");
-    // Use gets() for simplicity, though it's unsafe due to potential buffer overflow
-    gets(data);
-    // Concatenate the entered data with a fixed pattern
-    strcpy(concatdata, data);
-    strcat(concatdata, "0000000000000000");
-    
-    // Initialize divident with the first 17 characters of concatdata
-    for(i = 0; i <= 16; i++) divident[i] = concatdata[i];
-    // Null-terminate divident
-    divident[i + 1] = '\0';
-    
-    // Calculate CRC for source data
-    crc_cal(0);
-    
-    // Print the data and the calculated CRC
-    printf("\nData is: \t");
-    puts(data);
-    printf("\nThe frame transmitted is: \t");
-    printf("\n%s%s", data, src_crc);
-    
-    // Prompt the user to enter the received frame
-    printf("\n\t\tSOURCE NODE TRANSMITTED THE FRAME ---->\n");
-    printf("\n\n\n\n\t\t\tAT DESTINATION NODE\nEnter the received frame: ");
-    // Again, use gets() which is unsafe
-    gets(frame);
-    
-    // Update divident with the received frame
-    for(i = 0; i <= 16; i++) divident[i] = frame[i];
-    // Null-terminate divident
-    divident[i + 1] = '\0';
-    
-    // Calculate CRC for the received frame
-    crc_cal(1);
-    
-    // Compare the calculated CRC with the expected remainder
-    if(strcmp(dest_crc, res) == 0) // If they match, the frame is error-free
-        printf("\nReceived frame is error-free.");
-    else // If they do not match, the frame has errors
-        printf("\nReceived frame has one or more errors.");
-    
-    return 1;
+    int i, j, keylen, msglen, flag = 0;
+    char input[100], key[30], temp[30], quot[100], rem[30], key1[30];
+
+    // Input the data and the key
+    printf("Enter Data: ");
+    scanf("%s", input);
+    printf("Enter Key: ");
+    scanf("%s", key);
+
+    keylen = strlen(key);
+    msglen = strlen(input);
+    strcpy(key1, key);
+
+    // Append zero bits to the input data
+    for (i = 0; i < keylen - 1; i++) {
+        input[msglen + i] = '0';
+    }
+    input[msglen + keylen - 1] = '\0';
+
+    // Initialize temp with the first part of the input data
+    for (i = 0; i < keylen; i++) {
+        temp[i] = input[i];
+    }
+
+    // Perform the division using XOR and update quotient and remainder
+    for (i = 0; i < msglen; i++) {
+        quot[i] = temp[0];
+        if (quot[i] == '0') {
+            for (j = 0; j < keylen; j++) {
+                key[j] = '0';
+            }
+        } else {
+            for (j = 0; j < keylen; j++) {
+                key[j] = key1[j];
+            }
+        }
+        for (j = keylen - 1; j > 0; j--) {
+            if (temp[j] == key[j]) {
+                rem[j - 1] = '0';
+            } else {
+                rem[j - 1] = '1';
+            }
+        }
+        rem[keylen - 1] = input[i + keylen];
+        strcpy(temp, rem);
+    }
+
+    strcpy(rem, temp);
+
+    printf("\nQuotient is ");
+    for (i = 0; i < msglen; i++) {
+        printf("%c", quot[i]);
+    }
+
+    printf("\nRemainder is ");
+    for (i = 0; i < keylen - 1; i++) {
+        printf("%c", rem[i]);
+    }
+
+    printf("\nFinal data is: ");
+    for (i = 0; i < msglen; i++) {
+        printf("%c", input[i]);
+    }
+    for (i = 0; i < keylen - 1; i++) {
+        printf("%c", rem[i]);
+    }
+    printf("\n");
+
+    char temp1[100];
+    printf("Enter received data: ");
+    scanf("%s", temp1);
+
+    for (i = 0; i < keylen; i++) {
+        temp[i] = temp1[i];
+    }
+
+    for (i = 0; i < msglen; i++) {
+        quot[i] = temp[0];
+        if (quot[i] == '0') {
+            for (j = 0; j < keylen; j++) {
+                key[j] = '0';
+            }
+        } else {
+            for (j = 0; j < keylen; j++) {
+                key[j] = key1[j];
+            }
+        }
+        for (j = keylen - 1; j > 0; j--) {
+            if (temp[j] == key[j]) {
+                rem[j - 1] = '0';
+            } else {
+                rem[j - 1] = '1';
+            }
+        }
+        rem[keylen - 1] = temp1[i + keylen];
+        strcpy(temp, rem);
+    }
+
+    strcpy(rem, temp);
+
+    printf("\nQuotient is ");
+    for (i = 0; i < msglen; i++) {
+        printf("%c", quot[i]);
+    }
+
+    printf("\nRemainder is ");
+    for (i = 0; i < keylen - 1; i++) {
+        printf("%c", rem[i]);
+    }
+
+    flag = 0;
+    for (i = 0; i < keylen - 1; i++) {
+        if (rem[i] == '1') {
+            flag = 1;
+            break;
+        }
+    }
+
+    if (flag == 0) {
+        printf("\nNo Error\n");
+    } else {
+        printf("\nError is detected\n");
+    }
+
+    return 0;
 }
