@@ -7,6 +7,7 @@
 #### Mahesh huddar - for college exam purpose
 #### Grokking ML book 
 #### blogs - https://www.mldawn.com/concept-learning-and-general-to-specific-ordering-part3/
+#### https://medium.com/@pralhad2481/chapter-2-concept-learning-part-1-552b05641a6e
 
 ## IOT
 
