@@ -6,6 +6,7 @@
 #### College syllabus - https://youtube.com/playlist?list=PLJ_JCvXzMJUZx3idQZfCt01hxnTeiQSws&si=SMGDbWNLKFH4CQqE
 #### Mahesh huddar - for college exam purpose
 #### Grokking ML book 
+#### blogs - https://www.mldawn.com/concept-learning-and-general-to-specific-ordering-part3/
 
 ## IOT
 
