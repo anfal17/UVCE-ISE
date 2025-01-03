@@ -1,0 +1,78 @@
+import math
+import pandas as pd
+
+def infoGain(P, N):
+    if P == 0 or N == 0:
+        return 0
+    total = P + N
+    return -P / total * math.log2(P / total) - N / total * math.log2(N / total)
+
+def insertNode(tree, addTo, Node):
+    for k, v in tree.items():
+        if isinstance(v, dict):
+            tree[k] = insertNode(v, addTo, Node)
+    if addTo in tree:
+        if isinstance(tree[addTo], dict):
+            tree[addTo][Node] = 'None'
+        else:
+            tree[addTo] = {Node: 'None'}
+    return tree
+
+def insertConcept(tree, addTo, Node):
+    for k, v in tree.items():
+        if isinstance(v, dict):
+            tree[k] = insertConcept(v, addTo, Node)
+    if addTo in tree:
+        tree[addTo] = Node
+    return tree
+
+def getNextNode(data, AttributeList, concept, conceptVals, tree, addTo):
+    Total = data.shape[0]
+    if Total == 0:
+        return tree
+    countC = {}
+    for cVal in conceptVals:
+        dataCC = data[data[concept] == cVal]
+        countC[cVal] = dataCC.shape[0]
+    if countC[conceptVals[0]] == 0:
+        tree = insertConcept(tree, addTo, conceptVals[1])
+        return tree
+    if countC[conceptVals[1]] == 0:
+        tree = insertConcept(tree, addTo, conceptVals[0])
+        return tree
+    ClassEntropy = infoGain(countC[conceptVals[1]], countC[conceptVals[0]])
+    Attr = {a: list(set(data[a])) for a in AttributeList}
+    EntropyAttr = {}
+    for att in Attr:
+        attrEntropy = 0
+        for vals in Attr[att]:
+            subset = data[data[att] == vals]
+            subsetTotal = subset.shape[0]
+            subsetEntropy = 0
+            for c in conceptVals:
+                count = subset[subset[concept] == c].shape[0]
+                if count > 0:
+                    subsetEntropy += (count / subsetTotal) * math.log2(count / subsetTotal)
+            attrEntropy += (subsetTotal / Total) * -subsetEntropy
+        EntropyAttr[att] = attrEntropy
+    Gain = {att: ClassEntropy - EntropyAttr[att] for att in EntropyAttr}
+    Node = max(Gain, key=Gain.get)
+    tree = insertNode(tree, addTo, Node)
+    for nD in Attr[Node]:
+        tree = insertNode(tree, Node, nD)
+        newData = data[data[Node] == nD].drop(Node, axis=1)
+        newAttributeList = list(newData.columns)[:-1]
+        tree = getNextNode(newData, newAttributeList, concept, conceptVals, tree, nD)
+    return tree
+
+def main():
+    data = pd.read_csv('playtennis.csv')
+    print("Input Data:\n", data)
+    AttributeList = list(data.columns)[:-1]
+    concept = data.columns[-1]
+    conceptVals = list(set(data[concept]))
+    tree = getNextNode(data, AttributeList, concept, conceptVals, {'root': 'None'}, 'root')
+    print("Generated Decision Tree:\n", tree)
+
+if __name__ == "__main__":
+    main()
